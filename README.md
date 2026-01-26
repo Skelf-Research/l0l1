@@ -1,105 +1,245 @@
+<div align="center">
+
 # l0l1
 
-**AI-Powered SQL Analysis and Validation Library**
+**SQL that learns. AI that validates. Privacy that protects.**
 
-l0l1 provides intelligent SQL validation, PII detection, and continuous learning capabilities through CLI, REST API, Jupyter, and IDE interfaces.
+[![CI](https://github.com/skelf-research/l0l1-api/actions/workflows/ci.yml/badge.svg)](https://github.com/skelf-research/l0l1-api/actions/workflows/ci.yml)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docs](https://img.shields.io/badge/docs-docs.skelfresearch.com-blue)](https://docs.skelfresearch.com/l0l1)
 
-## Features
+[Documentation](https://docs.skelfresearch.com/l0l1) | [API Reference](https://docs.skelfresearch.com/l0l1/api) | [Examples](https://github.com/skelf-research/l0l1-api/tree/main/examples)
 
-- **AI Analysis** - Multi-provider (OpenAI, Anthropic) query validation, explanation, and completion
-- **PII Detection** - Automatic detection and anonymization of sensitive data
-- **Continuous Learning** - Learn from successful queries to improve suggestions
-- **Multi-Interface** - CLI, REST API, Jupyter notebooks, IDE plugins (LSP)
-- **Multi-Tenant** - Workspace isolation without authentication overhead
+</div>
+
+---
+
+## What is l0l1?
+
+l0l1 is a developer toolkit for SQL analysis that combines AI-powered validation with continuous learning. It detects PII, suggests improvements, and gets smarter from your successful queries.
+
+```bash
+# Validate with AI insights
+$ l0l1 validate "SELECT * FROM users WHERE email LIKE '%@%'"
+
+# Detect PII automatically
+$ l0l1 check-pii "SELECT ssn, email FROM customers"
+  Found: SSN, EMAIL_ADDRESS
+  Anonymized: SELECT <SSN>, <EMAIL> FROM customers
+
+# Learn from your patterns
+$ l0l1 complete "SELECT * FROM orders WHERE"
+  Suggestions based on 47 learned patterns...
+```
+
+## Installation
+
+```bash
+# Clone and install with uv (recommended)
+git clone https://github.com/skelf-research/l0l1-api.git && cd l0l1-api
+uv sync
+
+# Or install from PyPI
+pip install l0l1
+```
+
+**Requirements:** Python 3.11+, OpenAI or Anthropic API key
 
 ## Quick Start
 
 ```bash
-# Install
-git clone https://github.com/dipankar/l0l1-api.git && cd l0l1-api
-uv sync
+# Set your API key
+export OPENAI_API_KEY="sk-..."
 
-# Configure
-export OPENAI_API_KEY="your-key"
-
-# Run
+# Validate a query
 uv run l0l1 validate "SELECT * FROM users WHERE id = 1"
-uv run l0l1-serve  # Start API server at :8000
+
+# Start the API server
+uv run l0l1-serve
+# API at http://localhost:8000, docs at /docs
 ```
+
+## Core Features
+
+| Feature | Description |
+|---------|-------------|
+| **AI Validation** | Multi-provider support (OpenAI, Anthropic) for query analysis |
+| **PII Detection** | Presidio-powered detection and anonymization |
+| **Continuous Learning** | Graph-based pattern learning from successful queries |
+| **Multi-Interface** | CLI, REST API, Jupyter magic, VS Code extension |
+| **Schema Aware** | Context-aware validation with schema introspection |
 
 ## Usage
 
 ### CLI
+
 ```bash
-l0l1 validate "SELECT * FROM users"        # Validate query
-l0l1 explain "SELECT COUNT(*) FROM orders" # Explain query
-l0l1 check-pii "SELECT email FROM users"   # Detect PII
-l0l1 serve --port 8000                     # Start API
+l0l1 validate "SELECT * FROM users"           # Validate syntax and semantics
+l0l1 explain "SELECT COUNT(*) FROM orders"    # Get AI explanation
+l0l1 check-pii "SELECT email FROM users"      # Detect sensitive data
+l0l1 complete "SELECT * FROM orders WHERE"    # AI-powered completion
+l0l1 serve                                    # Start API server
 ```
 
 ### REST API
+
 ```bash
+# Start server
+uv run l0l1-serve
+
+# Validate query
 curl -X POST http://localhost:8000/sql/validate \
   -H "Content-Type: application/json" \
-  -d '{"query": "SELECT * FROM users", "workspace_id": "default"}'
+  -d '{"query": "SELECT * FROM users", "schema_context": "users(id, name, email)"}'
+
+# Check PII
+curl -X POST http://localhost:8000/sql/check-pii \
+  -H "Content-Type: application/json" \
+  -d '{"query": "SELECT * FROM users WHERE email = '\''john@example.com'\''"}'
 ```
 
-### Python
+### Python SDK
+
 ```python
-from l0l1 import SQLValidator
+from l0l1.models.factory import ModelFactory
+from l0l1.services.pii_detector import PIIDetector
+from l0l1.services.learning_service import LearningService
 
-validator = SQLValidator(workspace="my-project")
-result = validator.validate("SELECT * FROM users WHERE active = true")
+# AI-powered validation
+model = ModelFactory.get_default_model()
+result = await model.validate_sql_query(
+    "SELECT * FROM users WHERE id = 1",
+    schema_context="users(id INT, name VARCHAR, email VARCHAR)"
+)
+
+# PII detection
+detector = PIIDetector()
+findings = detector.detect_pii("SELECT * FROM users WHERE ssn = '123-45-6789'")
+anonymized, _ = detector.anonymize_sql(query)
+
+# Learning from successful queries
+learning = LearningService()
+await learning.record_successful_query("workspace-1", query, execution_time=0.5)
+suggestions = await learning.get_query_suggestions("SELECT * FROM", "workspace-1")
 ```
 
-## Documentation
+### Jupyter Integration
 
-| Document | Description |
-|----------|-------------|
-| [Getting Started](docs/getting-started.md) | Installation, configuration, first steps |
-| [Configuration](docs/configuration.md) | Environment variables and settings |
-| [CLI Reference](docs/cli.md) | Command line interface documentation |
-| [REST API](docs/api.md) | API endpoints and usage |
-| [Development](docs/development.md) | Contributing, testing, uv workflow |
+```python
+# Load the magic extension
+%load_ext l0l1.integrations.jupyter.magic
 
-### Guides
-| Guide | Description |
-|-------|-------------|
-| [VS Code Extension](docs/guides/vscode-extension.md) | IDE integration for VS Code |
-| [PII Detection & Learning](docs/guides/pii-learning.md) | PII detection flow and learning system |
-| [Graph-Based Learning](docs/guides/graph-learning.md) | Knowledge graph and continuous learning |
-| [Jupyter Integration](docs/guides/jupyter.md) | Notebook magic commands and widgets |
-| [UI Integration](docs/guides/ui-integration.md) | Frontend integration patterns |
-| [Analytics Workbench](docs/guides/analytics-workbench.md) | Building analytics environments |
+# Use magic commands
+%%sql_validate
+SELECT u.name, COUNT(o.id)
+FROM users u JOIN orders o ON u.id = o.user_id
+GROUP BY u.name
+```
+
+## Configuration
+
+Create a `.env` file or set environment variables:
+
+```bash
+# Required: AI Provider (at least one)
+OPENAI_API_KEY=sk-...
+# ANTHROPIC_API_KEY=sk-ant-...
+
+# Optional: Provider selection
+L0L1_AI_PROVIDER=openai          # or "anthropic"
+
+# Optional: Features
+L0L1_ENABLE_PII_DETECTION=true
+L0L1_ENABLE_LEARNING=true
+
+# Optional: Server
+L0L1_API_PORT=8000
+L0L1_CORS_ORIGINS=http://localhost:3000
+```
+
+See [Configuration Guide](https://docs.skelfresearch.com/l0l1/configuration) for all options.
 
 ## Architecture
 
 ```
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│  Interfaces  │  │   Services   │  │    Models    │
-├──────────────┤  ├──────────────┤  ├──────────────┤
-│ CLI          │  │ PII Detection│  │ OpenAI       │
-│ REST API     │──│ Learning     │──│ Anthropic    │
-│ Jupyter      │  │ Workspace    │  │ (Extensible) │
-│ IDE (LSP)    │  │ Vector DB    │  │              │
-└──────────────┘  └──────────────┘  └──────────────┘
+l0l1/
+├── api/           # FastAPI REST API
+├── cli/           # Typer CLI
+├── core/          # Configuration
+├── models/        # AI providers (OpenAI, Anthropic)
+├── services/      # Core services
+│   ├── pii_detector.py      # PII detection (Presidio)
+│   ├── learning_service.py  # Pattern learning
+│   ├── database_service.py  # DB connections
+│   └── schema_service.py    # Schema management
+└── integrations/
+    ├── jupyter/   # Notebook integration
+    └── ide/       # LSP server
 ```
 
 ## Development
 
 ```bash
-make setup      # Full dev environment setup
-make test       # Run tests
-make lint       # Run linters
-make serve      # Start dev server
-make help       # Show all commands
+# Setup dev environment
+make setup
+
+# Run tests
+make test
+
+# Lint and format
+make lint
+make format
+
+# Start dev server with reload
+make serve
+
+# Build documentation
+make docs
+```
+
+### Docker
+
+```bash
+# Build and run
+docker-compose up -d
+
+# Check health
+curl http://localhost:8000/health
+```
+
+## Documentation
+
+Full documentation at **[docs.skelfresearch.com/l0l1](https://docs.skelfresearch.com/l0l1)**
+
+- [Getting Started](https://docs.skelfresearch.com/l0l1/getting-started)
+- [Configuration](https://docs.skelfresearch.com/l0l1/configuration)
+- [CLI Reference](https://docs.skelfresearch.com/l0l1/cli)
+- [REST API](https://docs.skelfresearch.com/l0l1/api)
+- [Jupyter Guide](https://docs.skelfresearch.com/l0l1/guides/jupyter)
+- [VS Code Extension](https://docs.skelfresearch.com/l0l1/guides/vscode-extension)
+
+## Contributing
+
+Contributions welcome! See [Development Guide](https://docs.skelfresearch.com/l0l1/development).
+
+```bash
+# Fork, clone, then:
+uv sync --all-extras
+pre-commit install
+make test
 ```
 
 ## License
 
 MIT License - see [LICENSE](LICENSE)
 
-## Links
+---
 
-- [GitHub Issues](https://github.com/dipankar/l0l1-api/issues)
-- [GitHub Discussions](https://github.com/dipankar/l0l1-api/discussions)
+<div align="center">
+
+**[Documentation](https://docs.skelfresearch.com/l0l1)** | **[Issues](https://github.com/skelf-research/l0l1-api/issues)** | **[Discussions](https://github.com/skelf-research/l0l1-api/discussions)**
+
+Built by [Skelf Research](https://skelfresearch.com)
+
+</div>

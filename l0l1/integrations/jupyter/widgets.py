@@ -1,11 +1,12 @@
 """Interactive Jupyter widgets for l0l1 SQL analysis."""
 
 import asyncio
+import os
 from typing import Optional, List, Callable
 import ipywidgets as widgets
 from IPython.display import display, HTML
 
-from .client import L0l1JupyterClient
+from .client import L0l1JupyterClient, DEFAULT_API_URL
 
 
 class SQLValidatorWidget:
@@ -14,7 +15,7 @@ class SQLValidatorWidget:
     def __init__(
         self,
         workspace: str = "jupyter_widget",
-        api_url: str = "http://localhost:8000"
+        api_url: str = DEFAULT_API_URL
     ):
         self.workspace = workspace
         self.client = L0l1JupyterClient(api_url=api_url)

@@ -1,7 +1,10 @@
 """HTTP client for l0l1 API integration in Jupyter."""
 
+import os
 from typing import Optional, Dict, Any, List
 import httpx
+
+DEFAULT_API_URL = os.environ.get("L0L1_API_URL", "http://localhost:8000")
 
 
 class L0l1JupyterClient:
@@ -9,7 +12,7 @@ class L0l1JupyterClient:
 
     def __init__(
         self,
-        api_url: str = "http://localhost:8000",
+        api_url: str = DEFAULT_API_URL,
         timeout: float = 30.0
     ):
         self.api_url = api_url

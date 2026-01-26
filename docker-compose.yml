@@ -1,0 +1,63 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - L0L1_AI_PROVIDER=${L0L1_AI_PROVIDER:-openai}
+      - REDIS_URL=redis://redis:6379/0
+      - L0L1_CORS_ORIGINS=${L0L1_CORS_ORIGINS:-http://localhost:3000,http://localhost:8000}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./data/l0l1.db}
+      - L0L1_ENABLE_PII_DETECTION=${L0L1_ENABLE_PII_DETECTION:-true}
+      - L0L1_ENABLE_LEARNING=${L0L1_ENABLE_LEARNING:-true}
+    volumes:
+      - l0l1-data:/app/data
+      - l0l1-workspaces:/app/workspaces
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: PostgreSQL for production
+  # Uncomment to use PostgreSQL instead of SQLite
+  # postgres:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_USER: l0l1
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-l0l1_secret}
+  #     POSTGRES_DB: l0l1
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U l0l1"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  l0l1-data:
+  l0l1-workspaces:
+  redis-data:
+  # postgres-data:

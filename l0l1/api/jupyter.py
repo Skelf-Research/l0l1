@@ -306,10 +306,11 @@ def _generate_html_output(analysis_results: Dict[str, Any]) -> str:
     if "explanation" in results:
         explanation = results["explanation"]
         if "error" not in explanation:
+            explanation_text = explanation['text'].replace('\n', '<br>')
             html += f"""
             <div class="explanation-results" style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-                <h4 style="margin: 0 0 12px 0; color: #0d47a1; font-size: 14px; font-weight: 600;">📝 Query Explanation</h4>
-                <div style="line-height: 1.6; color: #1565c0;">{explanation['text'].replace('\n', '<br>')}</div>
+                <h4 style="margin: 0 0 12px 0; color: #0d47a1; font-size: 14px; font-weight: 600;">Query Explanation</h4>
+                <div style="line-height: 1.6; color: #1565c0;">{explanation_text}</div>
             </div>
             """
 

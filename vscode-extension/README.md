@@ -218,5 +218,5 @@ MIT License - see [LICENSE](../LICENSE)
 ## Links
 
 - [l0l1 Documentation](../docs/)
-- [GitHub Repository](https://github.com/dipankar/l0l1-api)
-- [Report Issues](https://github.com/dipankar/l0l1-api/issues)
+- [GitHub Repository](https://github.com/skelf-research/l0l1-api)
+- [Report Issues](https://github.com/skelf-research/l0l1-api/issues)

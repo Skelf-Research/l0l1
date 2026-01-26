@@ -160,12 +160,12 @@ l0l1-lsp = "l0l1.integrations.ide.server:main"
 l0l1 = "l0l1.jupyter.proxy:setup_l0l1"
 
 [project.urls]
-Homepage = "https://github.com/dipankar/l0l1-api"
-Repository = "https://github.com/dipankar/l0l1-api"
-Documentation = "https://l0l1.readthedocs.io"
-"Bug Tracker" = "https://github.com/dipankar/l0l1-api/issues"
-Changelog = "https://github.com/dipankar/l0l1-api/blob/main/CHANGELOG.md"
-Discussions = "https://github.com/dipankar/l0l1-api/discussions"
+Homepage = "https://skelfresearch.com"
+Repository = "https://github.com/skelf-research/l0l1-api"
+Documentation = "https://docs.skelfresearch.com/l0l1"
+"Bug Tracker" = "https://github.com/skelf-research/l0l1-api/issues"
+Changelog = "https://github.com/skelf-research/l0l1-api/blob/main/CHANGELOG.md"
+Discussions = "https://github.com/skelf-research/l0l1-api/discussions"
 
 [build-system]
 requires = ["hatchling"]

@@ -1,0 +1,93 @@
+site_name: l0l1 Documentation
+site_description: SQL that learns. AI that validates. Privacy that protects.
+site_author: Skelf Research
+site_url: https://docs.skelfresearch.com/l0l1
+
+repo_name: l0l1-api
+repo_url: https://github.com/skelf-research/l0l1-api
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started.md
+    - Configuration: configuration.md
+    - Quick Start: quickstart.md
+  - User Guide:
+    - CLI Reference: cli.md
+    - REST API: api.md
+  - Guides:
+    - Jupyter Integration: guides/jupyter.md
+    - VS Code Extension: guides/vscode-extension.md
+    - PII Detection & Learning: guides/pii-learning.md
+    - Graph-Based Learning: guides/graph-learning.md
+    - Graph Learning Examples: guides/graph-learning-examples.md
+    - UI Integration: guides/ui-integration.md
+    - Analytics Workbench: guides/analytics-workbench.md
+  - Development:
+    - Contributing: development.md
+    - Changelog: changelog.md
+  - API Reference:
+    - Overview: api-reference/index.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/skelf-research/l0l1-api
+  homepage: https://skelfresearch.com
+  version:
+    provider: mike

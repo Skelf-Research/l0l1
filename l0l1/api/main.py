@@ -69,10 +69,10 @@ app = FastAPI(
 app.include_router(jupyter.router)
 app.include_router(ui.router)
 
-# CORS middleware
+# CORS middleware - configured via L0L1_CORS_ORIGINS environment variable
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -736,6 +736,17 @@ async def import_patterns(
         request.overwrite
     )
     return PatternImportResponse(**result)
+
+
+def start_server():
+    """Entry point for l0l1-serve command."""
+    import uvicorn
+    uvicorn.run(
+        "l0l1.api.main:app",
+        host=settings.api_host,
+        port=settings.api_port,
+        reload=False
+    )
 
 
 if __name__ == "__main__":

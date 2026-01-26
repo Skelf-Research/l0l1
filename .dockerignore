@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv
+ENV
+env
+.eggs
+*.egg-info
+*.egg
+.pytest_cache
+.coverage
+htmlcov
+.mypy_cache
+.ruff_cache
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Documentation (build separately)
+docs/
+documentation/
+
+# Tests
+tests/
+
+# Development files
+.env
+.env.local
+*.md
+!README.md
+Makefile
+
+# Node (frontend built in Docker)
+frontend/node_modules
+frontend/.vscode
+
+# Misc
+*.log
+*.bak
+.DS_Store
+Thumbs.db
