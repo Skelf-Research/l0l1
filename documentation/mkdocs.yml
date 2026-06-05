@@ -1,10 +1,11 @@
 site_name: l0l1 Documentation
 site_description: SQL that learns. AI that validates. Privacy that protects.
 site_author: Skelf Research
-site_url: https://docs.skelfresearch.com/l0l1
+site_url: https://docs.skelfresearch.com/l0l1/
 
-repo_name: l0l1-api
-repo_url: https://github.com/skelf-research/l0l1-api
+repo_name: Skelf-Research/l0l1
+edit_uri: edit/main/documentation/docs/
+repo_url: https://github.com/Skelf-Research/l0l1
 
 theme:
   name: material
